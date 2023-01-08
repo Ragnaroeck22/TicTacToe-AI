@@ -7,6 +7,7 @@
 AiNode::AiNode()
 {
     parent = nullptr;
+    isAiTurn = true;
 }
 
 AiNode::AiNode(std::shared_ptr<AiNode> parentNode)
@@ -15,7 +16,6 @@ AiNode::AiNode(std::shared_ptr<AiNode> parentNode)
 
     planningBoard.fields = parent->planningBoard.fields;
 
-    if (parentNode != nullptr)
-        isAiTurn = !parentNode->isAiTurn;
+    isAiTurn = !parentNode->isAiTurn;
 }
 

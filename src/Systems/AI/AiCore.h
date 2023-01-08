@@ -9,7 +9,7 @@
 class AiCore {
 
 public:
-    std::shared_ptr<AiNode> currentNode;
+    std::shared_ptr<AiNode> rootNode;
 
 
 
@@ -19,7 +19,7 @@ public:
     void Update();
     void Draw();
 
-    int calcNodeScores(std::shared_ptr<AiNode> rootNode);
+    int calcNodeScores(std::shared_ptr<AiNode> currentNode);
 
 };
 

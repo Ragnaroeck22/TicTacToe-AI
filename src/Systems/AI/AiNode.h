@@ -22,7 +22,7 @@ public:
 
 
 public:
-    AiNode(); // Constructor for the first node
+    AiNode(); // Constructor FOR THE ROOT NODE ONLY
     AiNode(std::shared_ptr<AiNode> parentNode);
 
 };

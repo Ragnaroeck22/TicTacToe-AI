@@ -12,14 +12,6 @@ AiCore::AiCore()
 void AiCore::Update()
 {
 
-     for (int i = 0; i < 9; i++)
-     {
-         if (currentNode->planningBoard.fields[i]->state == UNMARKED)
-         {
-
-
-         }
-     }
 
 }
 
@@ -28,7 +20,7 @@ void AiCore::Draw()
 
 }
 
-int AiCore::calcNodeScores(std::shared_ptr<AiNode> rootNode)
+int AiCore::calcNodeScores(std::shared_ptr<AiNode> currentNode)
 {
     bool matchTie = true;
 
@@ -41,17 +33,32 @@ int AiCore::calcNodeScores(std::shared_ptr<AiNode> rootNode)
         return -1;
     }
 
+
     // Set all possible children
     for (int i = 0; i < 9; i++)
     {
+        // If the checked field is unmarked, create a child with a mark of the respective color (AI or Player)
         if (currentNode->planningBoard.fields[i]->state == UNMARKED)
         {
             matchTie = false; // If a node can be placed, the match can't be a tie
-            rootNode->children.push_back(std::make_shared<AiNode>(currentNode));
-            if (rootNode->children.back()->isAiTurn)
+
+            //std::shared_ptr<AiNode> helper;
+            currentNode->children.push_back(std::make_shared<AiNode>(currentNode));
+            //helper = std::make_shared<AiNode>(currentNode);
+
+
+
+            if (currentNode->isAiTurn)
             {
-                rootNode->children.back()->planningBoard.fields[i]->state = MARKED_BY_AI;
+                currentNode->children.back()->planningBoard.fields[i]->state = MARKED_BY_AI;
+                //helper->planningBoard.fields[i]->state = MARKED_BY_AI;
             }
+            else
+            {
+                currentNode->children.back()->planningBoard.fields[i]->state = MARKED_BY_PLAYER;
+                //helper->planningBoard.fields[i]->state = MARKED_BY_PLAYER;
+            }
+            //currentNode->children.push_back(helper);
         }
     }
 
@@ -68,7 +75,8 @@ int AiCore::calcNodeScores(std::shared_ptr<AiNode> rootNode)
         currentNode->nodeScore = currentNode->nodeScore + calcNodeScores(currentNode->children[i]);
     }
 
-
+    // Return the final score for further assessment
+    return currentNode->nodeScore;
 
 }
 

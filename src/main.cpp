@@ -4,7 +4,10 @@
 
 #include "config.h"
 
+#include <string>
+
 #include "Systems/Board.h"
+#include "Systems/AI/AiCore.h"
 
 int main() {
     // Raylib initialization
@@ -19,6 +22,9 @@ int main() {
     // ======== INIT ========
 
     Board board;
+    AiCore ai;
+
+    TraceLog(LOG_INFO, std::to_string(board.fields[8]->state).c_str());
 
     // Main game loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
@@ -26,6 +32,36 @@ int main() {
         // ======== UPDATE ========
 
         board.Update();
+
+        // Execute AI-Turn
+
+        if (!board.playerTurn)
+        {
+            // Setup root node
+            ai.rootNode = std::make_shared<AiNode>();
+            ai.rootNode->planningBoard = board;
+
+            // Calculate child scores (generate node tree)
+            ai.rootNode->nodeScore = ai.calcNodeScores(ai.rootNode);
+
+            // Determine best child (child with highest score)
+            std::shared_ptr<AiNode> bestChild = ai.rootNode->children[0];
+
+
+            for (int i = 0; i < ai.rootNode->children.size(); i++)
+            {
+                if (ai.rootNode->children[i]->nodeScore > bestChild->nodeScore)
+                    bestChild = ai.rootNode->children[i];
+            }
+
+            // Make a move
+            board.fields = bestChild->planningBoard.fields;
+
+            // AI turn over
+            board.playerTurn = true;
+
+        }
+
 
         // ======== DRAW ========
         BeginDrawing();
