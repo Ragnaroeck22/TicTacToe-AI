@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} main.cpp Systems/Board.cpp Systems/Board.h Systems/Field.cpp Systems/Field.h Enums.h Systems/AI/AiNode.cpp Systems/AI/AiNode.h Systems/AI/AiCore.cpp Systems/AI/AiCore.h)
+add_executable(${PROJECT_NAME} main.cpp Systems/Board.cpp Systems/Board.h Systems/Field.cpp Systems/Field.h Enums.h Systems/AI/AiNode.cpp Systems/AI/AiNode.h Systems/AI/AiCore.cpp Systems/AI/AiCore.h Functions.h Functions.cpp)
 
 # Add config.h.in file
 configure_file(config.h.in config.h)

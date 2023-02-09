@@ -4,6 +4,8 @@
 
 #include "AiNode.h"
 
+#include "../../Functions.h"
+
 AiNode::AiNode()
 {
     parent = nullptr;
@@ -14,7 +16,7 @@ AiNode::AiNode(std::shared_ptr<AiNode> parentNode)
 {
     parent = parentNode;
 
-    planningBoard.fields = parent->planningBoard.fields;
+    CopyBoardFields(parent->planningBoard, planningBoard);
 
     isAiTurn = !parentNode->isAiTurn;
 }

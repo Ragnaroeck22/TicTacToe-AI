@@ -6,6 +6,7 @@
 
 #include <string>
 
+#include "Functions.h"
 #include "Systems/Board.h"
 #include "Systems/AI/AiCore.h"
 
@@ -39,7 +40,8 @@ int main() {
         {
             // Setup root node
             ai.rootNode = std::make_shared<AiNode>();
-            ai.rootNode->planningBoard = board;
+            CopyBoardFields(board, ai.rootNode->planningBoard);
+
 
             // Calculate child scores (generate node tree)
             ai.rootNode->nodeScore = ai.calcNodeScores(ai.rootNode);
@@ -55,7 +57,7 @@ int main() {
             }
 
             // Make a move
-            board.fields = bestChild->planningBoard.fields;
+            CopyBoardFields(bestChild->planningBoard, board);
 
             // AI turn over
             board.playerTurn = true;
