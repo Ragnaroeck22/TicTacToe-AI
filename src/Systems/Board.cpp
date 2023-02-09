@@ -47,7 +47,6 @@ void Board::Update()
         }
     }
 
-
     // Execute player turn
     if (playerTurn)
     {

@@ -34,36 +34,47 @@ int main() {
 
         board.Update();
 
-        // Execute AI-Turn
 
-        if (!board.playerTurn)
+        if (!board.playerWon && !board.AIWon)
         {
-            // Setup root node
-            ai.rootNode = std::make_shared<AiNode>();
-            CopyBoardFields(board, ai.rootNode->planningBoard);
+            // Execute AI-Turn
 
-
-            // Calculate child scores (generate node tree)
-            ai.rootNode->nodeScore = ai.calcNodeScores(ai.rootNode);
-
-            // Determine best child (child with highest score)
-            std::shared_ptr<AiNode> bestChild = ai.rootNode->children[0];
-
-
-            for (int i = 0; i < ai.rootNode->children.size(); i++)
+            if (!board.playerTurn)
             {
-                if (ai.rootNode->children[i]->nodeScore > bestChild->nodeScore)
-                    bestChild = ai.rootNode->children[i];
+                // Setup root node
+                ai.rootNode = std::make_shared<AiNode>();
+                CopyBoardFields(board, ai.rootNode->planningBoard);
+
+
+                // Calculate child scores (generate node tree)
+                ai.rootNode->nodeScore = ai.calcNodeScores(ai.rootNode);
+
+                // Determine best child (child with highest score)
+                std::shared_ptr<AiNode> bestChild = ai.rootNode->children[0];
+
+
+                for (int i = 0; i < ai.rootNode->children.size(); i++)
+                {
+                    if (ai.rootNode->children[i]->nodeScore > bestChild->nodeScore)
+                        bestChild = ai.rootNode->children[i];
+                }
+
+                // Make a move
+                CopyBoardFields(bestChild->planningBoard, board);
+
+                // AI turn over
+                board.playerTurn = true;
+
+                if (board.winConditionMet(MARKED_BY_AI))
+                {
+                    board.AIWon = true;
+                }
+
+
+
+
             }
-
-            // Make a move
-            CopyBoardFields(bestChild->planningBoard, board);
-
-            // AI turn over
-            board.playerTurn = true;
-
         }
-
 
         // ======== DRAW ========
         BeginDrawing();
@@ -71,6 +82,22 @@ int main() {
 
 
             board.Draw();
+
+            if (board.playerWon)
+            {
+                DrawTextEx(GetFontDefault(), "PLAYER WON",
+                           {GetScreenWidth() / 2 - MeasureTextEx(GetFontDefault(), "PLAYER WON", 30, 1).x / 2,
+                            GetScreenHeight() / 2 - MeasureTextEx(GetFontDefault(), "PLAYER WON", 30, 1).y / 2},
+                            30, 1, GREEN);
+            }
+
+        if (board.AIWon)
+        {
+            DrawTextEx(GetFontDefault(), "AI WON",
+                       {GetScreenWidth() / 2 - MeasureTextEx(GetFontDefault(), "AI WON", 30, 1).x / 2,
+                        GetScreenHeight() / 2 - MeasureTextEx(GetFontDefault(), "AI WON", 30, 1).y / 2},
+                       30, 1, GREEN);
+        }
 
 
         EndDrawing();
